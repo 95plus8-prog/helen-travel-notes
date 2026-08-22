@@ -12,6 +12,14 @@ CN_NUM = ["一","二","三","四","五","六","七","八","九","十",
 
 # slug, 标题, 地点(展示), 国家/城市短标签, 日期(展示), 坐标, 副题(一句), 尺寸(w,h), 正文两段, 备注图(可选: (文件,说明))
 WORKS = [
+    dict(slug="cinque-terre", title="海风留在记忆里", place="意大利 · 五渔村", tag="意大利", date="2019.06.26",
+         coords="44.0990° N, 9.7376° E", sub="把日子过成旅行的样子。", w=1024, h=1536,
+         p1="2019 年 6 月 26 日，一天里的两个意大利：上午在比萨「扶」塔，下午已经坐在五渔村的礁石上吹海风。彩色的房子在悬崖上一层叠一层，那时我还没开始画画——只是觉得这一刻应该被记住，就请朋友按下了快门。",
+         p2="很多年后整理旧照片，第一眼就停在了这张。于是它成了整个系列里最早的一张照片、最晚动笔的一幅画。海风、阳光、彩色小镇，和刚刚好的自己。"),
+    dict(slug="pisa", title="意大利日记", place="意大利 · 比萨", tag="意大利", date="2019.06.26",
+         coords="43.7231° N, 10.3966° E", sub="在路上，遇见更好的自己。", w=1024, h=1536,
+         p1="和五渔村是同一天——2019 年 6 月 26 日。在比萨斜塔前，每个人都在做同一个动作：伸出手，假装把塔扶正。我也没能免俗，草帽都快笑掉了。",
+         p2="画的时候我把斜塔画成了旧图纸的样子，页边抄了一行意大利语：torre pendente di Pisa。有些快乐不需要独特，跟一千个游客做同一个动作，也是旅行的一部分。"),
     dict(slug="amsterdam", title="阿姆斯特丹", place="荷兰 · 阿姆斯特丹", tag="荷兰", date="2023.05",
          coords="52.3676° N, 4.9041° E", sub="在水之上，与时光相遇。", w=1024, h=1536,
          p1="那天沿着运河一直走，山形墙的老房子一栋挨着一栋，倒影在水面轻轻晃。我靠在铁栏杆上拍了张照，风把头发吹乱了也没管。",
@@ -257,14 +265,14 @@ def work_page():
             pi += 1
         items.append(gallery_item(i, w, cls, i % 3))
     head = HEAD.format(title="作品 — HELEN 印象旅行漫画",
-                       desc="十八段真实的旅程，事后画成漫画：荷兰、法国、西班牙、日本，以及中国的古城与老街。",
+                       desc="二十段真实的旅程，事后画成漫画：荷兰、法国、西班牙、日本，以及中国的古城与老街。",
                        ogtype="website", ogimage="assets/works/giethoorn.jpg", root="")
     return head + nav("", "work") + f'''
   <main id="main">
     <header class="section-tight" style="padding-top: calc(var(--sp-9) + var(--sp-4));">
       <div class="container">
         <p class="type-eyebrow reveal">TRAVEL NOTES · 全部作品</p>
-        <h1 class="type-display mt-3 reveal reveal-1" style="max-width:900px;">十八段旅程，<br>先拍下，再画一遍。</h1>
+        <h1 class="type-display mt-3 reveal reveal-1" style="max-width:900px;">二十段旅程，<br>先拍下，再画一遍。</h1>
         <p class="type-body mt-5 reveal reveal-2" style="max-width:var(--body-w);">
           每一幅漫画都始于一张真实的旅行照片——那天、那个地方、真实发生过的一刻。
           回来之后，我把它们重新画了一遍，留住相机来不及说的部分。
