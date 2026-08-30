@@ -8,16 +8,20 @@
 
 ```
 ├── index.html          首页（主视觉 / 精选作品 / 引言）
-├── work.html           作品总览（十八卷，错落网格）
-├── work/*.html         18 个作品详情页（由脚本生成）
+├── work.html           作品总览（二十卷，错落网格）
+├── work/*.html         20 个作品详情页（由脚本生成）
 ├── about.html          关于（创作理念 / 三步创作法 / 旅程年表）
 ├── journal.html        创作日记
 ├── contact.html        联系方式
 ├── css/style.css       全站样式（设计系统在文件顶部的 :root 变量里）
 ├── js/main.js          交互（加载动画 / 滚动显现 / 导航 / 光标等）
+├── scripts/check_site.py 自动化站点检查（生成一致性 / 链接 / 图片尺寸）
 ├── assets/works/       网页用图（JPEG，由原 PNG 压缩而来）
 ├── assets/favicon.svg  网站图标（印章）
-├── build_pages.py      作品页生成脚本
+├── build_pages.py      作品页、sitemap、robots 生成脚本
+├── sitemap.xml         搜索引擎站点地图（由脚本生成）
+├── robots.txt          爬虫入口（由脚本生成）
+├── _headers            Cloudflare Pages 安全头与缓存策略
 └── 漫画作品/            原始 PNG 作品（不参与部署，保留原稿）
 ```
 
@@ -34,7 +38,20 @@ python3 build_pages.py
 ```
 
 会重新生成 `work.html` 和全部 `work/*.html`（卷号、上一篇/下一篇自动排好）。
+同时会更新 `sitemap.xml` 和 `robots.txt`。
 首页 `index.html` 的精选卡片是手工挑选的，如需更换直接编辑即可。
+
+## 自动化检查
+
+```bash
+python3 scripts/check_site.py
+```
+
+检查内容：
+
+- `build_pages.py` 生成结果是否已同步到文件。
+- `WORKS` 声明的图片尺寸是否和 `assets/works/*.jpg` 实际尺寸一致。
+- 所有 HTML / CSS / JS 的本地引用是否存在。
 
 ## 本地预览
 

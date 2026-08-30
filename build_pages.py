@@ -4,8 +4,12 @@
 新增作品：把图片放进 assets/works/，在 WORKS 里加一条，重跑 python3 build_pages.py。
 """
 import os
+from datetime import date
+from xml.sax.saxutils import escape
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+SITE_URL = "https://helen-travel-notes.pages.dev"
+STATIC_PAGES = ["index.html", "work.html", "about.html", "journal.html", "contact.html"]
 
 CN_NUM = ["一","二","三","四","五","六","七","八","九","十",
           "十一","十二","十三","十四","十五","十六","十七","十八","十九","二十"]
@@ -291,6 +295,37 @@ def work_page():
 ''' + FOOTER.format(root="")
 
 
+def site_paths():
+    paths = STATIC_PAGES[:]
+    paths.extend(f"work/{w['slug']}.html" for w in WORKS)
+    return paths
+
+
+def sitemap_xml():
+    today = date.today().isoformat()
+    urls = []
+    for path in site_paths():
+        loc = SITE_URL + ("/" if path == "index.html" else "/" + path)
+        priority = "1.0" if path == "index.html" else "0.8" if path == "work.html" else "0.6"
+        urls.append(f"""  <url>
+    <loc>{escape(loc)}</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>{priority}</priority>
+  </url>""")
+    return """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+""" + "\n".join(urls) + "\n</urlset>\n"
+
+
+def robots_txt():
+    return f"""User-agent: *
+Allow: /
+
+Sitemap: {SITE_URL}/sitemap.xml
+"""
+
+
 def main():
     os.makedirs(os.path.join(ROOT, "work"), exist_ok=True)
     for i, w in enumerate(WORKS):
@@ -299,7 +334,11 @@ def main():
             f.write(detail_page(i, w))
     with open(os.path.join(ROOT, "work.html"), "w", encoding="utf-8") as f:
         f.write(work_page())
-    print(f"generated {len(WORKS)} detail pages + work.html")
+    with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write(sitemap_xml())
+    with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write(robots_txt())
+    print(f"generated {len(WORKS)} detail pages + work.html + sitemap.xml + robots.txt")
 
 
 if __name__ == "__main__":

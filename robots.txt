@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://helen-travel-notes.pages.dev/sitemap.xml
