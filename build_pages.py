@@ -164,6 +164,20 @@ HEAD = '''<!doctype html>
 '''
 
 
+def canonical_url(path):
+    """把仓库里的文件路径映射成线上规范 URL。
+
+    Cloudflare Pages 会把 /work.html 以 308 跳到 /work、把 /index.html 跳到 /。
+    所以 canonical 和 sitemap 必须直接用无扩展名形式，
+    否则等于把 canonical 指向一个重定向 URL，规范化信号会被削弱。
+    """
+    if path == "index.html":
+        return SITE_URL + "/"
+    if path.endswith(".html"):
+        path = path[: -len(".html")]
+    return SITE_URL + "/" + path
+
+
 def nav(root, active=""):
     keys = {k: "" for k in ["work", "about", "journal", "contact"]}
     if active in keys:
@@ -180,7 +194,7 @@ def detail_page(i, w):
     head = HEAD.format(title=f"{w['title']} — HELEN 印象旅行漫画",
                        desc=w["sub"], ogtype="article",
                        ogimage=f"../assets/works/{w['slug']}.jpg", root="../",
-                       canonical=f"{SITE_URL}/work/{w['slug']}.html")
+                       canonical=canonical_url(f"work/{w['slug']}.html"))
     variant_html = ""
     if w.get("variant"):
         vf, vc = w["variant"]
@@ -278,7 +292,7 @@ def work_page():
     head = HEAD.format(title="作品 — HELEN 印象旅行漫画",
                        desc="二十段真实的旅程，事后画成漫画：荷兰、法国、西班牙、日本，以及中国的古城与老街。",
                        ogtype="website", ogimage="assets/works/giethoorn.jpg", root="",
-                       canonical=f"{SITE_URL}/work.html")
+                       canonical=canonical_url("work.html"))
     return head + nav("", "work") + f'''
   <main id="main">
     <header class="section-tight" style="padding-top: calc(var(--sp-9) + var(--sp-4));">
@@ -312,7 +326,7 @@ def site_paths():
 def sitemap_xml():
     urls = []
     for path in site_paths():
-        loc = SITE_URL + ("/" if path == "index.html" else "/" + path)
+        loc = canonical_url(path)
         priority = "1.0" if path == "index.html" else "0.8" if path == "work.html" else "0.6"
         urls.append(f"""  <url>
     <loc>{escape(loc)}</loc>

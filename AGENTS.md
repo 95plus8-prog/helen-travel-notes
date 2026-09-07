@@ -13,6 +13,9 @@
 - 主站 canonical 已定为 Cloudflare Pages：`https://helen-travel-notes.pages.dev/`。
   全部 25 个页面都带 `<link rel="canonical">`，GitHub Pages 上的同一份内容会指回这里。
 - sitemap 的 `<lastmod>` 来自 `build_pages.py` 顶部的 `SITE_LASTMOD` 常量，内容更新时手动改。
+- canonical / sitemap 用无扩展名 URL（`canonical_url()` 负责映射）：Pages 会把 `.html` 308 跳走。
+- **部署 Cloudflare 不要用 `wrangler pages deploy .`**：wrangler 不读 `.gitignore`，
+  会把 `漫画作品/`、构建脚本和文档一起传到公网。要先拷一个只含站点文件的干净目录再部署。
 
 ## 常用命令
 

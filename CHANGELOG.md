@@ -9,6 +9,10 @@
 - 全站 25 个页面加上 `<link rel="canonical">` 与 `og:url`，统一指向 Cloudflare Pages。
   解决 pages.dev 与 github.io 两个域名同时返回 200、内容完全一致的重复内容问题。
 - `index.html` 的 JSON-LD `url` 由相对路径改为绝对地址。
+- canonical 与 sitemap 的 `<loc>` 改用无扩展名形式（`/work` 而非 `/work.html`）。
+  Cloudflare Pages 会把 `.html` 路径 308 跳到无扩展名形式，否则 canonical 指向的是重定向 URL。
+- Cloudflare Pages 改为只部署站点文件。此前 `wrangler pages deploy .` 把整个目录都传了上去，
+  导致 52MB 原稿 PNG、`build_pages.py` 和全部 `.md` 文档在公网可直接下载（`.gitignore` 对 wrangler 无效）。
 - 修复前的完整快照：git tag `backup/pre-p0-20260907`。
 
 ## 2026-08-30
