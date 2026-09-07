@@ -41,6 +41,10 @@ python3 build_pages.py
 同时会更新 `sitemap.xml` 和 `robots.txt`。
 首页 `index.html` 的精选卡片是手工挑选的，如需更换直接编辑即可。
 
+4. 内容有实质更新时，顺手把 `build_pages.py` 顶部的 `SITE_LASTMOD` 改成当天日期。
+   这个值是 sitemap 里所有 `<lastmod>` 的来源，刻意做成手写常量而不是「今天」——
+   否则每天重新生成都会和已提交的 `sitemap.xml` 不一致，`check_site.py` 会误报 stale。
+
 ## 自动化检查
 
 ```bash
@@ -49,7 +53,7 @@ python3 scripts/check_site.py
 
 检查内容：
 
-- `build_pages.py` 生成结果是否已同步到文件。
+- `build_pages.py` 生成结果是否已同步到文件（结果与日期无关，可任意天重复运行）。
 - `WORKS` 声明的图片尺寸是否和 `assets/works/*.jpg` 实际尺寸一致。
 - 所有 HTML / CSS / JS 的本地引用是否存在。
 

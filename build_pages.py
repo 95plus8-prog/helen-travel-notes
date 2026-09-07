@@ -4,11 +4,15 @@
 新增作品：把图片放进 assets/works/，在 WORKS 里加一条，重跑 python3 build_pages.py。
 """
 import os
-from datetime import date
 from xml.sax.saxutils import escape
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE_URL = "https://helen-travel-notes.pages.dev"
+# sitemap 里所有 <lastmod> 的取值。
+# 不用 date.today()：那会让重新生成的 sitemap 每天都和已提交的版本不同，
+# 使 scripts/check_site.py 的一致性比对跨天必然报 stale（历史上只能靠手工提交绕过）。
+# 站点内容有实质更新时，手动把这里改成当天日期，再跑一次 build_pages.py。
+SITE_LASTMOD = "2026-09-07"
 STATIC_PAGES = ["index.html", "work.html", "about.html", "journal.html", "contact.html"]
 
 CN_NUM = ["一","二","三","四","五","六","七","八","九","十",
@@ -149,7 +153,9 @@ HEAD = '''<!doctype html>
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:image" content="{ogimage}">
+<meta property="og:url" content="{canonical}">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="{canonical}">
 <link rel="icon" href="{root}assets/favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#F5EFE2">
 <link rel="stylesheet" href="{root}css/style.css">
@@ -173,7 +179,8 @@ def detail_page(i, w):
     vol = "卷" + CN_NUM[i]
     head = HEAD.format(title=f"{w['title']} — HELEN 印象旅行漫画",
                        desc=w["sub"], ogtype="article",
-                       ogimage=f"../assets/works/{w['slug']}.jpg", root="../")
+                       ogimage=f"../assets/works/{w['slug']}.jpg", root="../",
+                       canonical=f"{SITE_URL}/work/{w['slug']}.html")
     variant_html = ""
     if w.get("variant"):
         vf, vc = w["variant"]
@@ -270,7 +277,8 @@ def work_page():
         items.append(gallery_item(i, w, cls, i % 3))
     head = HEAD.format(title="作品 — HELEN 印象旅行漫画",
                        desc="二十段真实的旅程，事后画成漫画：荷兰、法国、西班牙、日本，以及中国的古城与老街。",
-                       ogtype="website", ogimage="assets/works/giethoorn.jpg", root="")
+                       ogtype="website", ogimage="assets/works/giethoorn.jpg", root="",
+                       canonical=f"{SITE_URL}/work.html")
     return head + nav("", "work") + f'''
   <main id="main">
     <header class="section-tight" style="padding-top: calc(var(--sp-9) + var(--sp-4));">
@@ -302,14 +310,13 @@ def site_paths():
 
 
 def sitemap_xml():
-    today = date.today().isoformat()
     urls = []
     for path in site_paths():
         loc = SITE_URL + ("/" if path == "index.html" else "/" + path)
         priority = "1.0" if path == "index.html" else "0.8" if path == "work.html" else "0.6"
         urls.append(f"""  <url>
     <loc>{escape(loc)}</loc>
-    <lastmod>{today}</lastmod>
+    <lastmod>{SITE_LASTMOD}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>{priority}</priority>
   </url>""")

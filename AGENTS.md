@@ -10,7 +10,9 @@
 - 新增作品时先更新 `WORKS`，再运行 `python3 build_pages.py`。
 - 原始 PNG 在 `漫画作品/`，不参与部署；网页用图在 `assets/works/`。
 - GitHub Pages 部署在子路径，站内链接保持相对路径。
-- Cloudflare Pages 是主站 canonical 候选：`https://helen-travel-notes.pages.dev/`。
+- 主站 canonical 已定为 Cloudflare Pages：`https://helen-travel-notes.pages.dev/`。
+  全部 25 个页面都带 `<link rel="canonical">`，GitHub Pages 上的同一份内容会指回这里。
+- sitemap 的 `<lastmod>` 来自 `build_pages.py` 顶部的 `SITE_LASTMOD` 常量，内容更新时手动改。
 
 ## 常用命令
 

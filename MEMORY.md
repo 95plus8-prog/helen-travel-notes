@@ -16,4 +16,6 @@
 - 先读目录、Git 状态、README、生成脚本，再改代码。
 - 不直接编辑生成页作为长期修改；应改 `build_pages.py`。
 - `.wrangler/` 是 Cloudflare 本地缓存，应忽略。
+- canonical 统一指向 Cloudflare Pages；GitHub Pages 是镜像，不再单独优化。
+- sitemap 的 lastmod 用常量 `SITE_LASTMOD`，不要改回 `date.today()`（会让站点检查跨天必挂）。
 - 联系页邮箱和社交链接仍是占位内容，正式上线前需要用户提供真实信息。
